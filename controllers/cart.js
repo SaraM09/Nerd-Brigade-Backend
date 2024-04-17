@@ -17,29 +17,46 @@ export const getAllCarts = async (req, res) => {
     res.status(200).json({ status: 'success', data: carts });
 }
 
-// desc Get cart by user ID
-// route GET /carts/user/:userId
+
+// desc Get user cart
+// route GET /cartItems/user/:userId
 export const getCartByUserId = async (req, res) => {
+    const { userId } = req.params; 
+
     try {
-        const cart = await prisma.cart.findUnique({
-            where: { userId: parseInt(req.params.userId) },
+        const userWithCart = await prisma.user.findUnique({
+            where: {
+                id: parseInt(userId),
+            },
             include: {
-                items: {
+                cart: {
                     include: {
-                        accessory: true
+                        items: {
+                            include: {
+                                accessory: true  
+                            }
+                        }
                     }
                 }
             }
         });
-        if (cart) {
-            res.status(200).json({ status: 'success', data: cart });
-        } else {
-            res.status(404).json({ status: 'error', message: 'Cart not found' });
+
+        if (!userWithCart) {
+            return res.status(404).json({ message: 'User not found' });
         }
+
+        res.status(200).json({
+            status: 'success',
+            data: userWithCart.cart
+        });
     } catch (error) {
-        res.status(500).json({ status: 'error', message: error.message });
+        console.error('Failed to retrieve user cart:', error);
+        res.status(500).json({
+            status: 'error',
+            message: 'Internal server error'
+        });
     }
-}
+};
 
 // desc Create cart
 // route POST /carts
