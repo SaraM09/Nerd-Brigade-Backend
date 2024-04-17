@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import usersRouter from "./routes/users.js";
 import cartRouter from "./routes/cart.js";
+import cartItemsRouter from "./routes/cartItems.js";
 
 
 
@@ -19,6 +20,8 @@ app.use(express.json());
 // routes
 app.use('/users', usersRouter);
 app.use('/cart', cartRouter);
+app.use('/cartItems', cartItemsRouter);
+app.use('/cartItems', cartItemsRouter);
 
 const PORT = process.env.PORT || 1119;
 
