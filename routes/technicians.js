@@ -1,5 +1,5 @@
 import express from 'express';
-import { getAllTechnicians, createTechnician, updateTechnician, deleteTechnician, getTechnicianById } from '../controllers/techinicians.js';
+import { getAllTechnicians, createTechnician, updateTechnician, deleteTechnician, getTechnicianById } from '../controllers/technicians.js';
 
 const router = express.Router();
 
