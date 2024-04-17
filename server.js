@@ -4,6 +4,7 @@ import usersRouter from "./routes/users.js";
 import cartRouter from "./routes/cart.js";
 import cartItemsRouter from "./routes/cartItems.js";
 import bookingsRouter from "./routes/bookings.js";
+import techiniciansRouter from "./routes/technicians.js";
 
 
 
@@ -23,6 +24,7 @@ app.use('/users', usersRouter);
 app.use('/cart', cartRouter);
 app.use('/cartItems', cartItemsRouter);
 app.use('/bookings', bookingsRouter);
+app.use('/technicians', techiniciansRouter);
 
 
 const PORT = process.env.PORT || 1119;
