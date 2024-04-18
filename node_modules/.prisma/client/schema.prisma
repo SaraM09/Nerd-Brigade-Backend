@@ -14,50 +14,54 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  username  String   @unique
-  email     String   @unique
-  phone     String?
-  address   String?
-  bookings  Booking[]
-  cart      Cart?    // Each user has zero or one cart
+  id       Int       @id @default(autoincrement())
+  username String    @unique
+  email    String    @unique
+  phone    String?
+  address  String?
+  bookings Booking[]
+  cart     Cart? // Each user has zero or one cart
+  payments Payment[]
 }
 
 model Cart {
-  id         Int        @id @default(autoincrement())
-  userId     Int        @unique  // Foreign key reference to User, must be unique
-  user       User       @relation(fields: [userId], references: [id])
-  items      CartItem[]
+  id       Int        @id @default(autoincrement())
+  userId   Int        @unique // Foreign key reference to User, must be unique
+  user     User       @relation(fields: [userId], references: [id])
+  items    CartItem[]
+  payments Payment[]
 }
 
 model CartItem {
   id          Int       @id @default(autoincrement())
-  cartId      Int       // Foreign key reference to Cart
-  accessoryId Int       // Foreign key reference to Accessory
+  cartId      Int
+  accessoryId Int
   accessory   Accessory @relation(fields: [accessoryId], references: [id])
   quantity    Int
   cart        Cart      @relation(fields: [cartId], references: [id])
+  payments    Payment[] // Establishes that multiple payments can be associated with one CartItem
 }
 
 model Booking {
-  id               Int       @id @default(autoincrement())
-  userId           Int       // Foreign key reference to User
-  technicianId     Int?      // Optional if no technician is assigned yet
+  id               Int         @id @default(autoincrement())
+  userId           Int // Foreign key reference to User
+  technicianId     Int? // Optional if no technician is assigned yet
   serviceType      String
   issueDescription String
   status           String
   scheduledDate    DateTime
   costEstimate     Float?
-  user             User      @relation(fields: [userId], references: [id])
+  user             User        @relation(fields: [userId], references: [id])
   technician       Technician? @relation(fields: [technicianId], references: [id])
+  payments         Payment[]
 }
 
 model Technician {
-  id              Int       @id @default(autoincrement())
-  name            String
-  contactInfo     String?
-  specialization  String?
-  bookings        Booking[]
+  id             Int       @id @default(autoincrement())
+  name           String
+  contactInfo    String?
+  specialization String?
+  bookings       Booking[]
 }
 
 model Accessory {
@@ -66,7 +70,24 @@ model Accessory {
   description String
   price       Float
   stock       Int
-  imageUrl    String?  
+  imageUrl    String?
   cartItems   CartItem[] // Relation to CartItem for inventory management
 }
 
+model Payment {
+  id            Int      @id @default(autoincrement())
+  userId        Int // Foreign key reference to User
+  bookingId     Int? // Optional: Foreign key reference to Booking
+  cartId        Int? // Optional: Foreign key reference to Cart
+  cartItemId    Int?
+  amount        Float // Total amount paid
+  paymentMethod String // Method of payment e.g., 'credit_card', 'paypal', etc.
+  status        String // Payment status e.g., 'pending', 'completed', 'failed'
+  createdAt     DateTime @default(now()) // When the payment was made
+  updatedAt     DateTime @updatedAt
+
+  user     User      @relation(fields: [userId], references: [id])
+  booking  Booking?  @relation(fields: [bookingId], references: [id])
+  cart     Cart?     @relation(fields: [cartId], references: [id])
+  cartItem CartItem? @relation(fields: [cartItemId], references: [id])
+}
