@@ -76,18 +76,20 @@ model Accessory {
 
 model Payment {
   id            Int      @id @default(autoincrement())
-  userId        Int // Foreign key reference to User
-  bookingId     Int? // Optional: Foreign key reference to Booking
-  cartId        Int? // Optional: Foreign key reference to Cart
+  userId        Int
+  bookingId     Int?
+  cartId        Int?
   cartItemId    Int?
-  amount        Float // Total amount paid
-  paymentMethod String // Method of payment e.g., 'credit_card', 'paypal', etc.
-  status        String // Payment status e.g., 'pending', 'completed', 'failed'
-  createdAt     DateTime @default(now()) // When the payment was made
+  amount        Float
+  currency      String   // Ensure this line exists if you want to include currency
+  paymentMethod String
+  status        String
+  confirm       Boolean  // Assuming this is intended to be a part of your model
+  createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
-  user     User      @relation(fields: [userId], references: [id])
-  booking  Booking?  @relation(fields: [bookingId], references: [id])
-  cart     Cart?     @relation(fields: [cartId], references: [id])
-  cartItem CartItem? @relation(fields: [cartItemId], references: [id])
+  user         User      @relation(fields: [userId], references: [id])
+  booking      Booking?  @relation(fields: [bookingId], references: [id])
+  cart         Cart?     @relation(fields: [cartId], references: [id])
+  cartItem     CartItem? @relation(fields: [cartItemId], references: [id])
 }
