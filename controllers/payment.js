@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient
 
-
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 // desc get all payments
 // route  GET /payments
 

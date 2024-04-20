@@ -81,10 +81,12 @@ model Payment {
   cartId        Int?
   cartItemId    Int?
   amount        Float
-  currency      String   // Ensure this line exists if you want to include currency
+  currency      String
   paymentMethod String
   status        String
-  confirm       Boolean  // Assuming this is intended to be a part of your model
+  confirm       Boolean
+  stripeChargeId String?   // Stripe Charge ID
+  receiptUrl    String?    // URL to the Stripe receipt
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
@@ -93,3 +95,4 @@ model Payment {
   cart         Cart?     @relation(fields: [cartId], references: [id])
   cartItem     CartItem? @relation(fields: [cartItemId], references: [id])
 }
+

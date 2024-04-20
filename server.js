@@ -8,7 +8,7 @@ import techiniciansRouter from "./routes/technicians.js";
 import accessoriesRouter from "./routes/accessories.js";
 import paymentsRouter from "./routes/payments.js";
 import productsRouter from "./routes/products.js";
-
+import Stripe from 'stripe';
 import bodyParser from "body-parser";
 
 
@@ -25,7 +25,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 
-//  const stripe = new stripe(process.env.STRIPE_SECRET_KEY);
+
+
 
 
 
