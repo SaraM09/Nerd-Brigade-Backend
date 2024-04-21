@@ -85,14 +85,14 @@ model Payment {
   paymentMethod String
   status        String
   confirm       Boolean
-  stripeChargeId String?   // Stripe Charge ID
-  receiptUrl    String?    // URL to the Stripe receipt
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  stripeChargeId String?  // Make sure this field is defined
+  receiptUrl    String?   // Make sure this field is defined
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 
-  user         User      @relation(fields: [userId], references: [id])
-  booking      Booking?  @relation(fields: [bookingId], references: [id])
-  cart         Cart?     @relation(fields: [cartId], references: [id])
-  cartItem     CartItem? @relation(fields: [cartItemId], references: [id])
+  user         User       @relation(fields: [userId], references: [id])
+  booking      Booking?   @relation(fields: [bookingId], references: [id])
+  cart         Cart?      @relation(fields: [cartId], references: [id])
+  cartItem     CartItem?  @relation(fields: [cartItemId], references: [id])
 }
 

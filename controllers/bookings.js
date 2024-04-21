@@ -13,33 +13,40 @@ export const getAllBookings = async (req, res) => {
 // desc create booking
 // route POST /bookings
 
+
 export const createBooking = async (req, res) => {
     const { userId, technicianId, serviceType, issueDescription, status, scheduledDate, costEstimate } = req.body;
-
     try {
+        // Convert userId and technicianId from string to integer
+        const numericUserId = parseInt(userId, 10);
+        const numericTechnicianId = technicianId ? parseInt(technicianId, 10) : null;
+        // Check if the conversion was successful
+        if (isNaN(numericUserId)) {
+            return res.status(400).json({ message: 'Invalid user ID' });
+        }
         // Validate user existence
         const userExists = await prisma.user.findUnique({
-            where: { id: userId }
+            where: { id: numericUserId }
         });
         if (!userExists) {
             return res.status(404).json({ message: 'User not found' });
         }
-
-        // Optional: Validate technician existence if technicianId is provided
-        if (technicianId) {
+        // Optional: Validate technician existence if technicianId is provided and valid
+        if (numericTechnicianId && isNaN(numericTechnicianId)) {
+            return res.status(400).json({ message: 'Invalid technician ID' });
+        } else if (numericTechnicianId) {
             const technicianExists = await prisma.technician.findUnique({
-                where: { id: technicianId }
+                where: { id: numericTechnicianId }
             });
             if (!technicianExists) {
                 return res.status(404).json({ message: 'Technician not found' });
             }
         }
-
         // Create the booking
         const newBooking = await prisma.booking.create({
             data: {
-                userId,
-                technicianId,
+                userId: numericUserId,
+                technicianId: numericTechnicianId,
                 serviceType,
                 issueDescription,
                 status,
@@ -47,13 +54,16 @@ export const createBooking = async (req, res) => {
                 costEstimate
             }
         });
-
         res.status(201).json(newBooking);
     } catch (error) {
         console.error('Failed to create booking:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
 }
+
+
+
+
 
 // desc update booking
 // route PUT /bookings/:id
