@@ -41,7 +41,6 @@ export const getUserById = async (req, res) => {
 
 // desc create user
 // route POST /users
-
 export const createUser = [
     celebrate(userSchema),
     async (req, res) => {
@@ -52,10 +51,45 @@ export const createUser = [
             });
             res.status(201).json({ status: 'success', data: user });
         } catch (error) {
-            res.status(500).json({ status: 'error', message: error.message });
+            if (error instanceof Prisma.PrismaClientKnownRequestError) {
+                // Check if we have a unique constraint violation
+                if (error.code === 'P2002') {
+                    return res.status(409).json({ status: 'error', message: `The specified ${error.meta?.target} is already in use.` });
+                }
+            }
+            // Log the error internally, as it might contain more sensitive data
+            console.error('Error creating user:', error);
+            // Return a generic error message
+            res.status(500).json({ status: 'error', message: 'Failed to process request due to a server error. Please try again later.' });
         }
     }
-]
+];
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // desc update user
 // route PUT /users/:id
