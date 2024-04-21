@@ -24,7 +24,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 
-// const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
 
 
 
